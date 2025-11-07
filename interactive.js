@@ -1,65 +1,102 @@
-const moods = [
-  { emoji: "😀", color: "#FFFACD", message: "You're feeling cheerful and full of energy!" },
-  { emoji: "😴", color: "#B0E0E6", message: "Sleepy vibes… maybe it’s nap time." },
-  { emoji: "😎", color: "#FFD700", message: "Cool and confident, ready to conquer the day." },
-  { emoji: "😡", color: "#F08080", message: "Uh oh… maybe step back and take a deep breath." },
-  { emoji: "🤔", color: "#90EE90", message: "Curious and thoughtful — keep exploring!" },
-  { emoji: "🥳", color: "#D8BFD8", message: "It’s party mode! Celebrate the little wins!" },
-  { emoji: "😭", color: "#ADD8E6", message: "A little sad today, but brighter days are ahead." },
-  { emoji: "🤩", color: "#FFB6C1", message: "You're starstruck and amazed by something!" }
+// --- Declare variables ---
+let enemyHealth = 100;
+const log = document.getElementById("battleLog");
+const healthDisplay = document.getElementById("enemyHealth");
+const victoryText = document.getElementById("victory");
+const body = document.body;
+
+// Array of spells
+const spells = [
+  { name: "Fire", emoji: "🔥", min: 10, max: 25, color: "#FF5733" },
+  { name: "Ice", emoji: "❄️", min: 5, max: 15, color: "#6ECFF6" },
+  { name: "Lightning", emoji: "⚡", min: 15, max: 30, color: "#F9E79F" }
 ];
 
-let clickCount = 0;
-const moodHistory = [];
+// --- Function to cast a spell ---
+function castSpell(type) {
+  const spell = spells.find(s => s.name.toLowerCase() === type);
+  if (!spell) return;
 
-// --- Function to generate a random mood ---
-function generateMood() {
-  clickCount++;
+  const damage = Math.floor(Math.random() * (spell.max - spell.min + 1)) + spell.min;
+  enemyHealth -= damage;
+  if (enemyHealth < 0) enemyHealth = 0;
 
-  // Pick a random mood index
-  const randomIndex = Math.floor(Math.random() * moods.length);
+  // Flash color animation
+  body.style.backgroundColor = spell.color;
+  setTimeout(() => body.style.backgroundColor = "#101020", 400);
 
-  // Comparative and arithmetic operators in action
-  if (clickCount % 5 === 0) {
-    console.log("You've clicked 5 times! Keep going!");
-  }
+  healthDisplay.textContent = enemyHealth;
 
-  // Retrieve DOM elements
-  const moodEl = document.getElementById("mood");
-  const messageEl = document.getElementById("message");
-  const body = document.body;
-  const list = document.getElementById("moodList");
+  const message = `🧙 You cast ${spell.name} ${spell.emoji} and dealt ${damage} damage! (${enemyHealth} HP left)`;
+  addLog(message);
 
-  // Simple fade-out effect
-  moodEl.style.opacity = 0;
-
-  // Wait for fade, then apply new mood
-  setTimeout(() => {
-    const mood = moods[randomIndex];
-    moodEl.textContent = mood.emoji;
-    messageEl.textContent = mood.message;
-    body.style.backgroundColor = mood.color;
-    moodEl.style.opacity = 1;
-
-    // Add mood to history list
-    moodHistory.push(mood.emoji);
-    updateHistory(list);
-
-    // Update document title
-    document.title = `Mood Machine - ${clickCount} Clicks`;
-  }, 400);
-}
-
-// --- Function to update mood history list ---
-function updateHistory(list) {
-  list.innerHTML = ""; // clear list
-  // Demonstrate looping
-  for (let i = moodHistory.length - 1; i >= 0; i--) {
-    const li = document.createElement("li");
-    li.textContent = `Mood ${moodHistory.length - i}: ${moodHistory[i]}`;
-    list.appendChild(li);
+  // --- Check victory condition ---
+  if (enemyHealth <= 0) {
+    victoryText.style.display = "block";
+    addLog("🎉 The enemy has been defeated!");
+    disableButtons();
+    startAutoReset();
   }
 }
 
-// --- Event listener ---
-document.getElementById("moodButton").addEventListener("click", generateMood);
+// --- Function to update the log ---
+function addLog(text) {
+  const entry = document.createElement("p");
+  entry.textContent = text;
+  log.appendChild(entry);
+  log.scrollTop = log.scrollHeight;
+}
+
+// --- Disable spell buttons ---
+function disableButtons() {
+  const buttons = document.querySelectorAll("#buttons button");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+  }
+}
+
+// --- Enable spell buttons ---
+function enableButtons() {
+  const buttons = document.querySelectorAll("#buttons button");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = false;
+  }
+}
+
+// --- Auto reset function with countdown ---
+function startAutoReset() {
+  let countdown = 5;
+  addLog(`🔁 New battle begins in ${countdown} seconds...`);
+
+  const timer = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      addLog(`⏳ ${countdown}...`);
+    } else {
+      clearInterval(timer);
+      resetBattle();
+    }
+  }, 1000);
+}
+
+// --- Reset the battle ---
+function resetBattle() {
+  enemyHealth = 100;
+  healthDisplay.textContent = enemyHealth;
+  log.innerHTML = "";
+  victoryText.style.display = "none";
+  enableButtons();
+
+  // Randomize enemy emoji each battle (fun addition)
+  const enemies = ["👹", "💀", "🧛‍♂️", "🐉", "🦴"];
+  document.getElementById("enemy").textContent =
+    enemies[Math.floor(Math.random() * enemies.length)];
+
+  addLog("🧙 A new enemy appears! Prepare to battle!");
+  body.style.backgroundColor = "#101020";
+}
+
+// --- Event listeners for spells ---
+document.getElementById("fire").addEventListener("click", () => castSpell("fire"));
+document.getElementById("ice").addEventListener("click", () => castSpell("ice"));
+document.getElementById("lightning").addEventListener("click", () => castSpell("lightning"));

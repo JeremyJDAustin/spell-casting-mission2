@@ -2,90 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Mood Machine</title>
+  <title>Spell Casting Simulator</title>
   <style>
     body {
-      text-align: center;
       font-family: Arial, sans-serif;
-      transition: background-color 0.8s ease;
-      padding: 30px;
+      text-align: center;
+      padding: 20px;
+      background-color: #101020;
+      color: white;
+      transition: background-color 0.6s;
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       margin-bottom: 10px;
     }
 
-    #mood {
-      font-size: 5rem;
-      margin-top: 20px;
-      opacity: 1;
-      transition: opacity 0.5s ease;
-    }
-
-    #message {
-      font-size: 1.3rem;
-      margin: 10px 0;
-      min-height: 40px;
+    #battleLog {
+      margin-top: 25px;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      font-size: 1rem;
+      height: 200px;
+      overflow-y: auto;
     }
 
     button {
+      margin: 10px;
       padding: 10px 25px;
-      margin-top: 20px;
-      font-size: 1.1rem;
       border: none;
       border-radius: 8px;
-      background-color: black;
-      color: white;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s;
+      background-color: #2a2a4a;
+      color: white;
+      transition: 0.3s;
     }
 
     button:hover {
-      background-color: #444;
+      background-color: #3e3e70;
     }
 
-    #history {
-      margin-top: 40px;
-      text-align: left;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      background-color: rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 10px 20px;
+    #enemy {
+      font-size: 3rem;
+      margin-top: 20px;
     }
 
-    #history h2 {
-      font-size: 1.3rem;
-      text-align: center;
+    #health {
+      font-size: 1.2rem;
+      margin-top: 10px;
     }
 
-    #moodList {
-      list-style: none;
-      padding: 0;
-    }
-
-    #moodList li {
-      margin: 5px 0;
+    #victory {
+      font-size: 1.5rem;
+      color: gold;
+      margin-top: 20px;
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎭 The Mood Machine 🎭</h1>
-  <p>Click below to reveal your random mood and track your emotional journey!</p>
+  <h1>🧙 Spell Casting Simulator ⚡</h1>
+  <p>Defeat the enemy by casting powerful spells!</p>
 
-  <div id="mood">😐</div>
-  <div id="message">Press the button to begin!</div>
-  <button id="moodButton">Generate Mood</button>
+  <div id="enemy">👹</div>
+  <div id="health">Enemy Health: <span id="enemyHealth">100</span> HP</div>
 
-  <div id="history">
-    <h2>Mood History</h2>
-    <ul id="moodList"></ul>
+  <div id="buttons">
+    <button id="fire">🔥 Fire Spell</button>
+    <button id="ice">❄️ Ice Spell</button>
+    <button id="lightning">⚡ Lightning Spell</button>
   </div>
 
-  <!-- External JS -->
+  <div id="battleLog"></div>
+
+  <div id="victory">✨ You defeated the enemy! ✨</div>
+
+  <!-- JS -->
   <script src="interactive.js"></script>
 </body>
 </html>
